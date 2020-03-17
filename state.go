@@ -602,13 +602,15 @@ func (m *Memberlist) gossip() {
 		if len(msgs) == 1 {
 			// Send single message as is
 			if err := m.rawSendMsgPacket(node.FullAddress(), &node.Node, msgs[0]); err != nil {
-				m.logger.Printf("[ERR] memberlist: Failed to send gossip to %s: %s", addr, err)
+				nameInfo := strings.Split(node.Name, ".")
+				m.logger.Printf("[ERR] memberlist: Failed to send gossip to (%s:%s:%s)", addr, nameInfo[0], nameInfo[1])
 			}
 		} else {
 			// Otherwise create and send a compound message
 			compound := makeCompoundMessage(msgs)
 			if err := m.rawSendMsgPacket(node.FullAddress(), &node.Node, compound.Bytes()); err != nil {
-				m.logger.Printf("[ERR] memberlist: Failed to send gossip to %s: %s", addr, err)
+				nameInfo := strings.Split(node.Name, ".")
+				m.logger.Printf("[ERR] memberlist: Failed to send gossip to (%s:%s:%s)", addr, nameInfo[0], nameInfo[1])
 			}
 		}
 	}
